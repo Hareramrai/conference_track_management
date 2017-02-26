@@ -50,7 +50,11 @@ class TrackScheduler
   end
   
   def prepare_next_track 
+    add_networking_event
     @tracks << Track.new
   end
   
+  def add_networking_event
+    current_track.add_event! Event.new('Networking Event',0), false
+  end
 end

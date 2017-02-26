@@ -1,5 +1,7 @@
 class Session
   
+  attr_reader :events, :length
+  
   def initialize 
     @last_event_time = 0
     @events = []

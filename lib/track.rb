@@ -1,6 +1,12 @@
 require_relative 'morning_session'
 require_relative 'afternoon_session'
+require 'forwardable'
 class Track
+  extend Forwardable
+  
+  def_delegator :@morning_session, :length, :morning_session_length
+  def_delegator :@afternoon_session, :length, :afternoon_session_length
+  
   def initialize
     @morning_session = MorningSession.new 
     @afternoon_session = AfternoonSession.new 
@@ -10,8 +16,8 @@ class Track
     @morning_session.can_accomodate?(event) || @afternoon_session.can_accomodate?(event)
   end
   
-  def add_event! event
-    if @morning_session.can_accomodate? event
+  def add_event! event, morning_session=true
+    if @morning_session.can_accomodate?(event) && morning_session
       @morning_session.add_event! event 
     else
       @afternoon_session.add_event! event 
@@ -26,6 +32,10 @@ class Track
   
   def events?
     @morning_session.events? and @afternoon_session.events?
+  end
+  
+  def length 
+    morning_session_length + afternoon_session_length
   end
   
 end
